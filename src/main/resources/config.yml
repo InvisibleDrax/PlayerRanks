@@ -1,0 +1,42 @@
+## Player Rank Configuration ##
+
+## READ ALL INSTRUCTIONS BELOW BEFORE CHANGING THE CONFIG ##
+
+# SET THIS ONCE THEN LEAVE IT ALONE #
+# Changing periodically will likely result in data loss #
+
+# You may create as many ranks as you want
+ranks:
+  # This is the name of the rank
+  # This string MUST match the permission group name used in your permission plugin
+  # NONE OF THE SPECIFIED ATTRIBUTES OF THE RANK MAY BE LEFT BLANK
+  vip:
+    # This is the tier of the rank
+    # This defines the hierarchy in which the ranks will go
+    # Players cannot redeem a rank of the same tier OR tiers below the tier they already have
+    # DO NOT USE THE SAME TIER TWICE
+    # TIERS CANNOT BE LESS THAN 1
+    tier: 1
+    # This is the display string of the rank item
+    # This will be the name of the item that is used to redeem the rank
+    # I suggest you make this the same as the group prefix you use in your permissions plugin
+    # In order to add colors to display strings, you MUST use '&' then the Bukkit color code (Ex. "&b" is aqua)
+    # This is a resource for all Bukkit color codes https://htmlcolorcodes.com/bukkit-color-codes/
+    displayString: "&aVIP"
+  vip+:
+    tier: 2
+    displayString: "&a&lVIP+"
+  mvp:
+    tier: 3
+    displayString: "&bMVP"
+  mvp+:
+    tier: 4
+    displayString: "&b&lMVP+"
+
+# This is the material that will be used for the rank item
+# Make sure the item is compatible with the version of your server
+# You CAN change this periodically without issues
+# If this is left empty, the plugin will default to PAPER
+# AIR is a material that represents an empty item
+# DO NOT SET TO AIR
+itemMaterial: PAPER

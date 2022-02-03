@@ -1,0 +1,18 @@
+name: PlayerRanks
+version: 1.0
+author: InvisibleDrax
+main: me.ice.spigot.plugins.playerranks.PlayerRanksPlugin
+api-version: 1.18
+depends: [LuckPerms, NBTAPI]
+prefix: PlayerRanks
+
+commands:
+  prankgive:
+    description: Gives specified player a rank item of the specified rank
+    permission: playerranks.give
+    permission-message: You do not have permission to use this command!
+
+permissions:
+  playerranks.giveitem:
+    description: Gives player permission to use prankgive command
+    default: op
