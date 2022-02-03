@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 @Getter
 public class Rank {
@@ -21,6 +22,7 @@ public class Rank {
 	private static PlayerRanksPlugin plugin = PlayerRanksPlugin.getInstance();
 
 	public static ArrayList<Rank> ranks = new ArrayList<>();
+	private static ArrayList<Node> rankNodes = new ArrayList<>();
 	private static HashMap<Integer, Rank> byTier = new HashMap<>();
 	private static HashMap<String, Rank> byName = new HashMap<>();
 
@@ -39,6 +41,7 @@ public class Rank {
 		ranks.add(this);
 		byTier.put(tier, this);
 		byName.put(name, this);
+		rankNodes.add(Node.builder("group." + name).build());
 	}
 
 	public static Rank getRank(String name) {
@@ -49,16 +52,28 @@ public class Rank {
 		return byTier.get(tier);
 	}
 
+	public static Rank getRank(Player player) {
+		LuckPerms api = PlayerRanksPlugin.getInstance().getLuckPerms();
+		User user = api.getUserManager().getUser(player.getUniqueId());
+
+		Rank rank = Rank.DEFAULT;
+		for (Node n : rankNodes) {
+			if (user.getNodes().contains(n)) {
+				return getRank(n.getKey().replace("group.", ""));
+			}
+		}
+		return rank;
+	}
+
 	public static void setRank(Player player, Rank rank) {
 		LuckPerms api = PlayerRanksPlugin.getInstance().getLuckPerms();
 		User user = api.getUserManager().getUser(player.getUniqueId());
-		Rank oldRank = PlayerRanksPlugin.PlayerRankData.getRank(player);
+		Rank oldRank = Rank.getRank(player);
 
 		user.data().remove(Node.builder("group." + oldRank.getName()).build());
 		Node node = Node.builder("group." + rank.getName()).build();
 		user.data().add(node);
 		api.getUserManager().saveUser(user);
-		PlayerRanksPlugin.PlayerRankData.setRank(player, rank);
 	}
 
 	public static void loadRanks() {

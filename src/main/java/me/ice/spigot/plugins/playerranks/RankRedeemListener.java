@@ -49,7 +49,7 @@ public class RankRedeemListener implements Listener {
     }
 
     public void runRankRedeem(Player player, Rank rank) {
-        Rank currentRank = PlayerRanksPlugin.PlayerRankData.getRank(player);
+        Rank currentRank = Rank.getRank(player);
         int tier = rank.getTier();
         //Check if new rank is lower than old rank
         if (!(currentRank.getTier() < tier)) {
