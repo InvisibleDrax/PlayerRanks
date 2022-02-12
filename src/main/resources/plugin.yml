@@ -1,5 +1,5 @@
 name: PlayerRanks
-version: 1.0.1
+version: 1.1
 author: InvisibleDrax
 main: me.ice.spigot.plugins.playerranks.PlayerRanksPlugin
 api-version: 1.13

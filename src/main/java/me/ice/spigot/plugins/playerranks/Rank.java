@@ -14,24 +14,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 @Getter
 public class Rank {
 
-	private static PlayerRanksPlugin plugin = PlayerRanksPlugin.getInstance();
+	private static final PlayerRanksPlugin plugin = PlayerRanksPlugin.getInstance();
 
-	public static ArrayList<Rank> ranks = new ArrayList<>();
-	private static ArrayList<Node> rankNodes = new ArrayList<>();
-	private static HashMap<Integer, Rank> byTier = new HashMap<>();
-	private static HashMap<String, Rank> byName = new HashMap<>();
+	public static final ArrayList<Rank> ranks = new ArrayList<>();
+	private static final ArrayList<Node> rankNodes = new ArrayList<>();
+	private static final HashMap<Integer, Rank> byTier = new HashMap<>();
+	private static final HashMap<String, Rank> byName = new HashMap<>();
 
-	public static Rank DEFAULT = new Rank("default", "", 0);
+	public static final Rank DEFAULT = new Rank("default", "", 0);
 
-	private ItemStack item;
-	private int tier;
-	private String name;
-	private String displayString;
+	private final ItemStack item;
+	private final int tier;
+	private final String name;
+	private final String displayString;
 
 	private Rank(String name, String displayString, int tier) {
 		this.name = name;
@@ -56,13 +55,13 @@ public class Rank {
 		LuckPerms api = PlayerRanksPlugin.getInstance().getLuckPerms();
 		User user = api.getUserManager().getUser(player.getUniqueId());
 
-		Rank rank = Rank.DEFAULT;
 		for (Node n : rankNodes) {
+			assert user != null;
 			if (user.getNodes().contains(n)) {
 				return getRank(n.getKey().replace("group.", ""));
 			}
 		}
-		return rank;
+		return Rank.DEFAULT;
 	}
 
 	public static void setRank(Player player, Rank rank) {
@@ -70,6 +69,7 @@ public class Rank {
 		User user = api.getUserManager().getUser(player.getUniqueId());
 		Rank oldRank = Rank.getRank(player);
 
+		assert user != null;
 		user.data().remove(Node.builder("group." + oldRank.getName()).build());
 		Node node = Node.builder("group." + rank.getName()).build();
 		user.data().add(node);
@@ -79,6 +79,7 @@ public class Rank {
 	public static void loadRanks() {
 		FileConfiguration config = plugin.getConfig();
 		ConfigurationSection section = config.getConfigurationSection("ranks");
+		assert section != null;
 		for (String name : section.getKeys(false)) {
 			new Rank(name, section.getString(name + ".displayString"), section.getInt(name + ".tier"));
 		}
@@ -88,12 +89,13 @@ public class Rank {
 		if (tier == 0) {
 			return null;
 		}
-		Material mat = Material.getMaterial(plugin.getConfig().getString("itemMaterial"));
+		Material mat = PlayerRanksPlugin.RANKMAT;
 		if (mat == null) {
 			mat = Material.PAPER;
 		}
 		ItemStack item = new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
+		assert meta != null;
 		meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Rank: " + ChatColor.translateAlternateColorCodes('&', displayString));
 		ArrayList<String> lore = new ArrayList<>();
 		lore.add(ChatColor.GRAY + "Right-Click to apply this rank to your player!");
